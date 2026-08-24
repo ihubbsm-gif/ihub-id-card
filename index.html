@@ -378,10 +378,10 @@
                 The office checks it and replies to <span id="waitEmail">arunssunitra@gmail.com</span> with a Hub ID once approved.
               </div>
               <div class="officepanel">
-                <input id="idInput" placeholder="IHUB/FS/BSP/450" />
-                <button class="officebtn" id="approveBtn">Office: enter ID from reply email</button>
+                <input id="idInput" placeholder="e.g. IHUB/FS/BSP/450" />
+                <button class="officebtn" id="approveBtn">Generate verified ID</button>
               </div>
-              <p class="officehint">Once the office's approval email arrives, type the Hub ID it contains here to activate this card.</p>
+              <p class="officehint">Type the Hub ID you're assigning in the empty box above (e.g. <b>IHUB/FS/BSP/450</b>), then tap <b>Generate verified ID</b>. The front of the card and downloadable images appear right below within a few seconds.</p>
             </div>
 
             <div class="backfoot">Contact +91 1596 242158 · curatorbsm@bet.org.in</div>
@@ -693,8 +693,11 @@
       $('resetBtn').style.display = 'none';
       const note = document.createElement('p');
       note.style.cssText = 'font-size:11px;color:var(--muted);text-align:center;max-width:360px;line-height:1.5;';
-      note.textContent = 'Opened from the application email. The photo is not carried in this link — flip the card, enter the Hub ID, then download the images to attach to your reply.';
+      note.textContent = 'Opened from the application email. The photo is not carried in this link — type the Hub ID below, then download the images to attach to your reply.';
       $('cardStage').insertBefore(note, $('cardStage').firstChild);
+      // office mode: show the back side straight away and focus the ID box
+      card.classList.add('flipped');
+      setTimeout(() => { $('idInput').focus(); }, 750);
       return;
     }
     const saved = loadState();
