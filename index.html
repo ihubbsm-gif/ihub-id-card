@@ -245,6 +245,16 @@
   .sealtext b{ color:var(--purple); display:block; font-size:9.5px; }
   .sealtext .code{ font-family:'JetBrains Mono',monospace; font-size:8.5px; color:var(--ink); }
 
+  .extrasPanel{
+    display:none; width:420px; max-width:92vw;
+    background:var(--paper); border-radius:14px;
+    padding:16px 18px 18px;
+    box-shadow:0 12px 28px -10px rgba(11,31,58,0.22);
+  }
+  .extrasPanel.show{ display:block; }
+  .extrasHead{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13px; color:var(--ink); margin:0 0 4px; }
+  .extrasSub{ font-size:10.5px; color:var(--muted); margin:0 0 12px; }
+
   .previewrow{ display:flex; gap:8px; margin-top:8px; }
   .previewcell{ flex:1; text-align:center; }
   .previewcell img{
@@ -390,6 +400,7 @@
 
       </div>
     </div>
+    <div class="extrasPanel" id="extrasPanel"></div>
     <p class="hint">Tap the card to flip between the ID side and the terms / approval side.</p>
     <button class="resetlink" id="resetBtn">Not you? Start a new application</button>
   </div>
@@ -539,6 +550,7 @@
     const today = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
     const safeId = idVal.replace(/[^A-Za-z0-9]/g,'_');
 
+    // keep the back of the physical-looking card compact — no images/buttons here
     $('approvalZone').innerHTML = `
       <div class="seal">
         <img class="stampimg" src="${STAMP_SRC}" alt="BET-TATC official stamp">
@@ -548,8 +560,15 @@
           <div class="code">${idVal}</div>
         </div>
       </div>
-      <p class="previewloading" id="previewLoading">Preparing front and back images…</p>
-      <p class="replylink" id="replyLinkWrap"></p>
+      <p class="officehint">Downloadable front &amp; back images and the reply email link are in the panel below the card ↓</p>
+    `;
+
+    // everything else lives in its own panel below the card, so nothing gets clipped
+    const extras = $('extrasPanel');
+    extras.classList.add('show');
+    extras.innerHTML = `
+      <p class="extrasHead">Verified ID — ready to send</p>
+      <p class="extrasSub">Preparing front and back images…</p>
     `;
 
     const replySubject = 'Your BET-TATC Innovation Hub membership is approved';
@@ -565,32 +584,31 @@
       'BET-TATC, Pilani'
     ].join('\n');
     const replyMailto = `mailto:${encodeURIComponent(studentEmail)}?subject=${encodeURIComponent(replySubject)}&body=${encodeURIComponent(replyBody)}`;
-    document.getElementById('replyLinkWrap').innerHTML =
-      `<a href="${replyMailto}">Office: draft the approval reply email →</a>`;
 
-    // capture both faces right away so the office can SEE them before ever opening the reply email
     try{
       const [frontData, backData] = await Promise.all([captureFace('front'), captureFace('back')]);
-      const loadingEl = document.getElementById('previewLoading');
-      if(loadingEl){
-        loadingEl.outerHTML = `
-          <div class="previewrow">
-            <div class="previewcell">
-              <img src="${frontData}" alt="Front of ID card">
-              <div class="plabel">Front</div>
-              <a class="dlbtn" href="${frontData}" download="${safeId}_front.png">Download front</a>
-            </div>
-            <div class="previewcell">
-              <img src="${backData}" alt="Back of ID card">
-              <div class="plabel">Back</div>
-              <a class="dlbtn" href="${backData}" download="${safeId}_back.png">Download back</a>
-            </div>
+      extras.innerHTML = `
+        <p class="extrasHead">Verified ID — ready to send</p>
+        <div class="previewrow">
+          <div class="previewcell">
+            <img src="${frontData}" alt="Front of ID card">
+            <div class="plabel">Front</div>
+            <a class="dlbtn" href="${frontData}" download="${safeId}_front.png">Download front</a>
           </div>
-        `;
-      }
+          <div class="previewcell">
+            <img src="${backData}" alt="Back of ID card">
+            <div class="plabel">Back</div>
+            <a class="dlbtn" href="${backData}" download="${safeId}_back.png">Download back</a>
+          </div>
+        </div>
+        <p class="replylink"><a href="${replyMailto}">Office: draft the approval reply email →</a></p>
+      `;
     } catch(err){
-      const loadingEl = document.getElementById('previewLoading');
-      if(loadingEl) loadingEl.textContent = 'Could not generate a preview in this browser. Try Chrome or Edge.';
+      extras.innerHTML = `
+        <p class="extrasHead">Verified ID — ready to send</p>
+        <p class="extrasSub" style="color:#A32D2D;">Could not generate a preview in this browser. Please try Chrome or Edge, or use the reply link below and attach a screenshot instead.</p>
+        <p class="replylink"><a href="${replyMailto}">Office: draft the approval reply email →</a></p>
+      `;
       console.error('Preview capture failed', err);
     }
   }
