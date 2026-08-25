@@ -557,10 +557,9 @@
         <div class="sealtext">
           <b>Digitally verified</b>
           Approved ${today}
-          <div class="code">${idVal}</div>
         </div>
       </div>
-      <p class="officehint">Downloadable front &amp; back images and the reply email link are in the panel below the card ↓</p>
+      <p class="officehint downloadnote">Downloadable front &amp; back images and the reply email link are in the panel below the card ↓</p>
     `;
 
     // everything else lives in its own panel below the card, so nothing gets clipped
@@ -642,6 +641,8 @@
     clone.style.transform = 'none';
     clone.style.width = original.offsetWidth + 'px';
     clone.style.height = original.offsetHeight + 'px';
+    // strip on-screen-only helper text so the exported ID image stays clean
+    clone.querySelectorAll('.flipnote, .downloadnote').forEach(el => el.remove());
     document.body.appendChild(clone);
     const canvas = await html2canvas(clone, { backgroundColor: null, scale: 2 });
     document.body.removeChild(clone);
