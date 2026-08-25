@@ -311,7 +311,7 @@
     </div>
 
     <button class="submitbtn" id="submitBtn">Email application to BET-TATC</button>
-    <p class="maildest">Sends to <b>ihubbsm@gmail.com</b> via your email app</p>
+    <p class="maildest">Sends to <b>ihubbsm@gmail.com</b> via your email app — remember to attach a photo of yourself in that email before sending.</p>
   </div>
 
   <div class="stage" id="cardStage">
@@ -455,6 +455,8 @@
       `Mobile number: ${data.mobile}`,
       `Applicant email: ${data.email}`,
       '',
+      'Please attach a passport-size photo of yourself to this email before sending it - it will be used on your ID card.',
+      '',
       reviewLink
         ? `Open this application to review, approve, and download the ID images:\n${reviewLink}`
         : '(No review link: the ID card tool has not been published online yet.)',
@@ -466,29 +468,39 @@
   }
 
   // ---- photo capture: resize any uploaded photo down to a small square jpeg ----
+  function resizeImageFile(file, size){
+    size = size || 240;
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = size; canvas.height = size;
+          const ctx = canvas.getContext('2d');
+          const scale = Math.max(size / img.width, size / img.height);
+          const w = img.width * scale, h = img.height * scale;
+          ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
+          resolve(canvas.toDataURL('image/jpeg', 0.85));
+        };
+        img.onerror = reject;
+        img.src = ev.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
   let pendingPhotoDataUrl = '';
-  $('photoInput').addEventListener('change', (e) => {
+  $('photoInput').addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if(!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const img = new Image();
-      img.onload = () => {
-        const size = 240;
-        const canvas = document.createElement('canvas');
-        canvas.width = size; canvas.height = size;
-        const ctx = canvas.getContext('2d');
-        const scale = Math.max(size / img.width, size / img.height);
-        const w = img.width * scale, h = img.height * scale;
-        ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
-        pendingPhotoDataUrl = canvas.toDataURL('image/jpeg', 0.85);
-        const prev = $('photoPreview');
-        prev.src = pendingPhotoDataUrl;
-        prev.style.display = 'block';
-      };
-      img.src = ev.target.result;
-    };
-    reader.readAsDataURL(file);
+    try{
+      pendingPhotoDataUrl = await resizeImageFile(file);
+      const prev = $('photoPreview');
+      prev.src = pendingPhotoDataUrl;
+      prev.style.display = 'block';
+    } catch(err){ console.error('Could not read photo', err); }
   });
 
   function applyPhoto(dataUrl){
@@ -712,8 +724,28 @@
       $('resetBtn').style.display = 'none';
       const note = document.createElement('p');
       note.style.cssText = 'font-size:11px;color:var(--muted);text-align:center;max-width:360px;line-height:1.5;';
-      note.textContent = 'Opened from the application email. The photo is not carried in this link — type the Hub ID below, then download the images to attach to your reply.';
+      note.textContent = 'Opened from the application email. This link does not carry a photo — if the student attached one to their email, add it below, then type the Hub ID and generate the card.';
       $('cardStage').insertBefore(note, $('cardStage').firstChild);
+
+      // let the office attach the student's emailed photo before generating the card
+      const photoWrap = document.createElement('div');
+      photoWrap.style.cssText = 'text-align:center;';
+      photoWrap.innerHTML = `
+        <label for="officePhotoInput" style="font-size:10.5px;color:var(--muted);display:block;margin-bottom:6px;">
+          Add the student's photo (if they attached one to their email)
+        </label>
+        <input type="file" id="officePhotoInput" accept="image/*" style="font-size:11.5px;">
+      `;
+      $('cardStage').insertBefore(photoWrap, document.getElementById('idcard'));
+      document.getElementById('officePhotoInput').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+        try{
+          const dataUrl = await resizeImageFile(file);
+          applyPhoto(dataUrl);
+        } catch(err){ console.error('Could not read photo', err); }
+      });
+
       // office mode: show the back side straight away and focus the ID box
       card.classList.add('flipped');
       setTimeout(() => { $('idInput').focus(); }, 750);
