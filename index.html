@@ -192,6 +192,7 @@
   .hubidbanner.pendingstate .val{ color:#C9D3E0; font-weight:400; font-size:11px; }
 
   .maincontent{ display:flex; gap:14px; flex:1; }
+  .photoCol{ display:flex; flex-direction:column; width:70px; flex:none; }
   .photo{
     width:70px; height:88px; border-radius:6px;
     background:linear-gradient(160deg, var(--steel), #142B49);
@@ -201,6 +202,19 @@
   }
   .photo svg{ width:34px; height:34px; opacity:0.55; }
   .photo img{ width:100%; height:100%; object-fit:cover; display:none; }
+  .photoUploadBtn{
+    display:none;
+    margin-top:6px;
+    font-size:8px;
+    color:var(--amber);
+    text-align:center;
+    cursor:pointer;
+    border:1px dashed rgba(242,169,59,0.5);
+    border-radius:6px;
+    padding:4px 2px;
+  }
+  .photoUploadBtn.show{ display:block; }
+  .photoUploadBtn:hover{ background:rgba(242,169,59,0.1); }
   .details{ flex:1; min-width:0; }
   .name{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:16px; line-height:1.15; margin:0 0 2px; }
   .role{ font-size:9.5px; color:var(--amber); letter-spacing:0.5px; text-transform:uppercase; margin-bottom:8px; }
@@ -344,11 +358,17 @@
             </div>
 
             <div class="maincontent">
-              <div class="photo" id="photoBox">
-                <img id="photoImg" alt="Applicant photo">
-                <svg id="photoPlaceholder" viewBox="0 0 24 24" fill="none" stroke="#F4F4F2" stroke-width="1.4">
-                  <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/>
-                </svg>
+              <div class="photoCol">
+                <div class="photo" id="photoBox">
+                  <img id="photoImg" alt="Applicant photo">
+                  <svg id="photoPlaceholder" viewBox="0 0 24 24" fill="none" stroke="#F4F4F2" stroke-width="1.4">
+                    <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/>
+                  </svg>
+                </div>
+                <label class="photoUploadBtn no-export" id="officePhotoWrap" for="officePhotoInput">
+                  Browse photo
+                  <input type="file" id="officePhotoInput" accept="image/*" style="display:none;">
+                </label>
               </div>
               <div class="details">
                 <p class="name" id="outName">Gulshan Choudhary</p>
@@ -654,7 +674,7 @@
     clone.style.width = original.offsetWidth + 'px';
     clone.style.height = original.offsetHeight + 'px';
     // strip on-screen-only helper text so the exported ID image stays clean
-    clone.querySelectorAll('.flipnote, .downloadnote').forEach(el => el.remove());
+    clone.querySelectorAll('.flipnote, .downloadnote, .no-export').forEach(el => el.remove());
     document.body.appendChild(clone);
     const canvas = await html2canvas(clone, { backgroundColor: null, scale: 2 });
     document.body.removeChild(clone);
@@ -700,8 +720,14 @@
 
   const card = $('idcard');
   function toggleFlip(){ card.classList.toggle('flipped'); }
-  card.addEventListener('click', toggleFlip);
-  card.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleFlip(); } });
+  card.addEventListener('click', (e) => {
+    if(e.target.closest('input, button, a, label')) return;
+    toggleFlip();
+  });
+  card.addEventListener('keydown', e => {
+    if(e.target.closest('input, button, a, label')) return;
+    if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleFlip(); }
+  });
 
   // ---- on load: either open from the office's email link, restore this device's
   // own saved application, or show a blank form ----
@@ -724,20 +750,12 @@
       $('resetBtn').style.display = 'none';
       const note = document.createElement('p');
       note.style.cssText = 'font-size:11px;color:var(--muted);text-align:center;max-width:360px;line-height:1.5;';
-      note.textContent = 'Opened from the application email. This link does not carry a photo — if the student attached one to their email, add it below, then type the Hub ID and generate the card.';
+      note.textContent = 'Opened from the application email. This link does not carry a photo — if the student attached one to their email, use "Browse photo" on the card, then type the Hub ID and generate.';
       $('cardStage').insertBefore(note, $('cardStage').firstChild);
 
-      // let the office attach the student's emailed photo before generating the card
-      const photoWrap = document.createElement('div');
-      photoWrap.style.cssText = 'text-align:center;';
-      photoWrap.innerHTML = `
-        <label for="officePhotoInput" style="font-size:10.5px;color:var(--muted);display:block;margin-bottom:6px;">
-          Add the student's photo (if they attached one to their email)
-        </label>
-        <input type="file" id="officePhotoInput" accept="image/*" style="font-size:11.5px;">
-      `;
-      $('cardStage').insertBefore(photoWrap, document.getElementById('idcard'));
-      document.getElementById('officePhotoInput').addEventListener('change', async (e) => {
+      // reveal the photo browse control under the photo box, and wire it up
+      $('officePhotoWrap').classList.add('show');
+      $('officePhotoInput').addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if(!file) return;
         try{
