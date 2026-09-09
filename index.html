@@ -263,7 +263,7 @@
   .footrow{ display:flex; justify-content:flex-end; margin-top:auto; padding:4px 0; }
   .flipnote{ font-size:8px; color:#8a94a6; letter-spacing:0.4px; text-transform:uppercase; }
 
-  .circuitDecor{ position:absolute; left:0; right:0; bottom:0; height:30px; z-index:1; opacity:1; pointer-events:none; }
+  .circuitDecor{ position:absolute; left:0; right:0; bottom:0; height:34px; z-index:1; opacity:1; pointer-events:none; }
 
   .back-body{ padding:16px 18px; display:flex; flex-direction:column; height:100%; }
   .back-head{ display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--navy); padding-bottom:7px; margin-bottom:9px; }
@@ -469,28 +469,37 @@
               <span class="flipnote">Tap to flip →</span>
             </div>
           </div>
-          <div class="circuitDecor no-export">
-            <svg viewBox="0 0 420 48" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-              <g fill="none" stroke="#5B6B82" stroke-width="1.6">
-                <path d="M0 36 H40 L52 24 H100 V36 H150 L162 48"/>
-                <path d="M20 48 V32 L34 18 H90 L104 32 V48"/>
-                <path d="M0 44 H60 L70 34 H130 V48"/>
-                <path d="M120 48 L140 26 H210 L226 10 H300"/>
-                <path d="M180 48 V28 H260 L276 12 H340 V48"/>
-                <path d="M300 48 L320 26 H380 L392 14 H420"/>
-                <path d="M250 48 V34 H320 L332 48"/>
-                <path d="M340 48 V38 H420"/>
+          <div class="circuitDecor">
+            <svg viewBox="0 0 420 34" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+              <g fill="none" stroke="#8B98AC" stroke-width="1.3">
+                <path d="M0 26 H36 L46 16 H86 V26 H126 L136 34"/>
+                <path d="M16 34 V22 L28 10 H70 L80 22 V34"/>
+                <path d="M0 32 H50 L58 24 H100 V34"/>
+                <path d="M104 34 L120 18 H172 L184 6 H236"/>
+                <path d="M150 34 V20 H210 L222 8 H262 V34"/>
+                <path d="M236 34 L252 18 H296 L306 8 H350"/>
+                <path d="M198 34 V24 H250 L260 34"/>
+                <path d="M262 34 V26 H420"/>
+                <path d="M310 34 L322 22 H360 L370 12 H420"/>
+                <path d="M356 34 V28 H420"/>
               </g>
-              <g fill="#5B6B82">
-                <circle cx="52" cy="24" r="3"/>
-                <circle cx="34" cy="18" r="3"/>
-                <circle cx="70" cy="34" r="3"/>
-                <circle cx="226" cy="10" r="3"/>
-                <circle cx="276" cy="12" r="3"/>
-                <circle cx="392" cy="14" r="3"/>
-                <circle cx="162" cy="48" r="3"/>
-                <circle cx="104" cy="32" r="3"/>
-                <circle cx="332" cy="48" r="3"/>
+              <g fill="none" stroke="#B8C1D1" stroke-width="1">
+                <rect x="184" y="6" width="22" height="11" rx="2"/>
+                <path d="M188 6 V2 M200 6 V2 M188 17 V21 M200 17 V21"/>
+                <rect x="296" y="10" width="16" height="9" rx="2"/>
+                <path d="M300 19 V23 M308 19 V23"/>
+              </g>
+              <g fill="#F2A93B">
+                <circle cx="46" cy="16" r="2.6"/>
+                <circle cx="28" cy="10" r="2.6"/>
+                <circle cx="58" cy="24" r="2.6"/>
+                <circle cx="184" cy="6" r="2.6"/>
+                <circle cx="306" cy="8" r="2.6"/>
+                <circle cx="370" cy="12" r="2.6"/>
+                <circle cx="136" cy="34" r="2.6"/>
+                <circle cx="80" cy="22" r="2.6"/>
+                <circle cx="222" cy="8" r="2.6"/>
+                <circle cx="350" cy="8" r="2.6"/>
               </g>
             </svg>
           </div>
