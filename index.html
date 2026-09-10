@@ -828,6 +828,21 @@
     // strip on-screen-only helper text so the exported ID image stays clean
     clone.querySelectorAll('.flipnote, .downloadnote, .no-export').forEach(el => el.remove());
     document.body.appendChild(clone);
+
+    // wait for every image inside the clone (tick badge, stamp, photo) to actually
+    // finish decoding in this new copy before snapshotting it — otherwise images
+    // that load instantly on screen can still be blank in the captured PNG
+    const imgs = Array.from(clone.querySelectorAll('img'));
+    await Promise.all(imgs.map(img => {
+      if(img.complete && img.naturalWidth > 0) return Promise.resolve();
+      return new Promise(resolve => {
+        img.addEventListener('load', resolve, { once: true });
+        img.addEventListener('error', resolve, { once: true });
+      });
+    }));
+    // give the browser one extra paint frame before snapshotting
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
     const canvas = await html2canvas(clone, { backgroundColor: null, scale: 2 });
     document.body.removeChild(clone);
     return canvas.toDataURL('image/png');
