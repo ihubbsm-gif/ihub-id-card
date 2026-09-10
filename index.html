@@ -210,7 +210,7 @@
   .statuspill.approved{ background:#0B1F3A; border:1px solid #0B1F3A; color:#fff; }
   .statuspill i{ width:6px;height:6px;border-radius:50%; }
   .statuspill.pending i{ background:var(--amber); }
-  .tickIcon{ font-weight:800; font-size:11px; line-height:1; color:#3DDC84; }
+  .tickIcon{ flex:none; display:block; }
 
   .hubidbanner{
     display:flex; align-items:center; justify-content:center; gap:8px;
@@ -248,9 +248,9 @@
     padding:4px 2px;
   }
   .photoUploadBtn.show{ display:block; }
-  .photoPosSlider{ width:76px; margin-top:5px; accent-color:var(--amber-dark); }
+  .photoPosSlider{ width:76px; margin-top:5px; accent-color:var(--amber-dark); display:none; }
   .photoPosSlider.show{ display:block; }
-  .photoPosHint{ font-size:7px; color:var(--muted); text-align:center; margin:1px 0 0; }
+  .photoPosHint{ font-size:7px; color:var(--muted); text-align:center; margin:1px 0 0; display:none; }
   .photoPosHint.show{ display:block; }
   .photoUploadBtn:hover{ background:rgba(242,169,59,0.1); }
 
@@ -455,8 +455,8 @@
                   Browse photo
                   <input type="file" id="officePhotoInput" accept="image/*" style="display:none;">
                 </label>
-                <input type="range" id="photoPosSlider" class="photoPosSlider no-export" min="0" max="100" value="50" style="display:none;">
-                <p class="photoPosHint no-export" id="photoPosHint" style="display:none;">↕ Adjust photo</p>
+                <input type="range" id="photoPosSlider" class="photoPosSlider no-export" min="0" max="100" value="50">
+                <p class="photoPosHint no-export" id="photoPosHint">↕ Adjust photo</p>
               </div>
               <div class="identity">
                 <p class="name" id="outName">Gulshan Choudhary</p>
@@ -535,11 +535,11 @@
                 <b>Application emailed to ihubbsm@gmail.com.</b>
                 The office checks it and replies to <span id="waitEmail">arunssunitra@gmail.com</span> with a Hub ID once approved.
               </div>
-              <div class="officepanel">
+              <div class="officepanel" id="officePanel" style="display:none;">
                 <input id="idInput" placeholder="e.g. IHUB/FS/BSP/450" />
                 <button class="officebtn" id="approveBtn">Generate verified ID</button>
               </div>
-              <p class="officehint">Type the Hub ID you're assigning in the empty box above (e.g. <b>IHUB/FS/BSP/450</b>), then tap <b>Generate verified ID</b>. The front of the card and downloadable images appear right below within a few seconds.</p>
+              <p class="officehint" id="officeHintText" style="display:none;">Type the Hub ID you're assigning in the empty box above (e.g. <b>IHUB/FS/BSP/450</b>), then tap <b>Generate verified ID</b>. The front of the card and downloadable images appear right below within a few seconds.</p>
             </div>
 
             <div class="backfoot">Contact +91 1596 242158 · curatorbsm@bet.org.in</div>
@@ -704,7 +704,7 @@
   async function renderApproved(idVal, studentName, studentEmail, animateDots){
     $('statusPill').classList.remove('pending');
     $('statusPill').classList.add('approved');
-    $('statusPill').innerHTML = '<span class="tickIcon">&#10003;</span><span id="statusText">Verified</span>';
+    $('statusPill').innerHTML = '<svg class="tickIcon" viewBox="0 0 20 20" width="12" height="12"><circle cx="10" cy="10" r="10" fill="#3DDC84"/><path d="M5.5 10.2l2.8 2.8 6.2-6.5" fill="none" stroke="#0B1F3A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="statusText">Verified</span>';
     $('hubIdBanner').classList.remove('pendingstate');
     $('hubIdVal').textContent = idVal;
     $('idCodeBack').textContent = 'ID ' + idVal;
@@ -922,6 +922,9 @@
 
       // reveal the photo browse control under the photo box, and wire it up
       $('officePhotoWrap').classList.add('show');
+      // office-only controls: only the reviewer opening this link can see/use these
+      $('officePanel').style.display = 'flex';
+      $('officeHintText').style.display = 'block';
       $('officePhotoInput').addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if(!file) return;
