@@ -164,7 +164,7 @@
 
   .stage{ display:none; flex-direction:column; align-items:center; gap:14px; }
   .stage.show{ display:flex; }
-  .card{ width:420px; max-width:92vw; height:0; padding-bottom:74%; position:relative; cursor:pointer; }
+  .card{ width:420px; max-width:92vw; height:280px; position:relative; cursor:pointer; }
   .card-inner{
     position:absolute; inset:0;
     transition:transform 0.7s cubic-bezier(.4,.2,.2,1);
@@ -185,17 +185,17 @@
   .front .faceSurface{ background:#ffffff; color:#111318; }
   .back .faceSurface{ background:var(--paper); color:var(--ink); }
 
-  .front-body{ padding:12px 16px 30px; display:flex; flex-direction:column; height:100%; position:relative; z-index:2; box-sizing:border-box; }
+  .front-body{ padding:12px 16px 10px; display:flex; flex-direction:column; height:100%; position:relative; z-index:2; box-sizing:border-box; }
   .headerRow{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
   .logoPair{ display:flex; align-items:center; gap:2px; flex:none; }
   .orgLogoImg{
-    width:65px; height:65px; border-radius:0;
+    width:38px; height:38px; border-radius:0;
     object-fit:contain; background:#fff; flex:none;
   }
   .brandtext{ text-align:center; flex:1; min-width:0; }
-  .brandtext .org{ font-family:'Playfair Display',serif; font-weight:800; font-size:20px; line-height:1.05; color:#241E6B; white-space:nowrap; }
-  .brandtext .sub{ font-family:'Times New Roman', Times, serif; font-weight:700; font-size:10.5px; line-height:1.3; color:#1B2A6B; margin-top:3px; white-space:nowrap; letter-spacing:-0.3px; }
-  .brandtext .sub2{ font-family:'Times New Roman', Times, serif; font-weight:700; font-size:10px; line-height:1.3; color:#1B2A6B; white-space:nowrap; letter-spacing:-0.3px; }
+  .brandtext .org{ font-family:'Playfair Display',serif; font-weight:800; font-size:clamp(15px, 4.4vw, 20px); line-height:1.05; color:#241E6B; white-space:nowrap; }
+  .brandtext .sub{ font-family:'Times New Roman', Times, serif; font-weight:700; font-size:clamp(8px, 2.3vw, 10.5px); line-height:1.3; color:#1B2A6B; margin-top:3px; white-space:nowrap; letter-spacing:-0.3px; }
+  .brandtext .sub2{ font-family:'Times New Roman', Times, serif; font-weight:700; font-size:clamp(7.5px, 2.2vw, 10px); line-height:1.3; color:#1B2A6B; white-space:nowrap; letter-spacing:-0.3px; }
 
   .statuspill{
     font-family:'Inter',sans-serif;
@@ -220,8 +220,8 @@
     margin:0 -16px 12px;
     text-align:center;
   }
-  .hubidbanner .lbl{ font-size:11px; color:#C9D3E0; font-weight:500; }
-  .hubidbanner .val{ font-family:'JetBrains Mono',monospace; font-weight:700; font-size:14px; color:#fff; }
+  .hubidbanner .lbl{ font-size:clamp(9px, 2.4vw, 11px); color:#C9D3E0; font-weight:500; flex:none; }
+  .hubidbanner .val{ font-family:'JetBrains Mono',monospace; font-weight:700; font-size:clamp(11px, 3.1vw, 14px); color:#fff; word-break:break-all; }
   .hubidbanner.pendingstate .val{ color:#C9D3E0; font-weight:400; font-size:12px; }
 
   .maincontent{ display:flex; align-items:flex-start; gap:14px; flex:1; }
@@ -248,22 +248,26 @@
     padding:4px 2px;
   }
   .photoUploadBtn.show{ display:block; }
+  .photoPosSlider{ width:76px; margin-top:5px; accent-color:var(--amber-dark); }
+  .photoPosSlider.show{ display:block; }
+  .photoPosHint{ font-size:7px; color:var(--muted); text-align:center; margin:1px 0 0; }
+  .photoPosHint.show{ display:block; }
   .photoUploadBtn:hover{ background:rgba(242,169,59,0.1); }
 
   .identity{ flex:none; width:110px; padding-top:2px; }
-  .name{ font-family:'Inter',sans-serif; font-weight:700; font-size:17px; line-height:1.2; margin:0 0 3px; color:#0B1F3A; }
-  .role{ font-size:9.5px; color:#4a5568; letter-spacing:0.3px; text-transform:uppercase; margin-bottom:8px; }
+  .name{ font-family:'Inter',sans-serif; font-weight:700; font-size:clamp(14px, 3.7vw, 17px); line-height:1.2; margin:0 0 3px; color:#0B1F3A; }
+  .role{ font-size:clamp(8px, 2.1vw, 9.5px); color:#4a5568; letter-spacing:0.3px; text-transform:uppercase; margin-bottom:8px; }
 
   .fieldsCol{ flex:1; min-width:0; padding-top:2px; }
-  .field{ display:grid; grid-template-columns:48px 8px 1fr; font-size:11.5px; line-height:1.3; padding:3px 0; color:#111318; }
+  .field{ display:grid; grid-template-columns:44px 8px 1fr; font-size:clamp(9.5px, 2.5vw, 11.5px); line-height:1.3; padding:3px 0; color:#111318; }
   .field .k{ font-weight:700; color:#0B1F3A; }
   .field .sep{ color:#0B1F3A; }
   .field .v{ font-weight:500; }
 
-  .footrow{ display:flex; justify-content:flex-end; margin-top:auto; padding:4px 0; }
+  .footrow{ display:flex; justify-content:flex-end; margin-top:auto; padding:2px 0; }
   .flipnote{ font-size:8px; color:#8a94a6; letter-spacing:0.4px; text-transform:uppercase; }
 
-  .circuitDecor{ position:absolute; left:0; right:0; bottom:0; height:34px; z-index:1; opacity:1; pointer-events:none; }
+  .circuitDecor{ width:100%; height:28px; margin-top:6px; opacity:1; pointer-events:none; flex:none; }
 
   .back-body{ padding:16px 18px; display:flex; flex-direction:column; height:100%; }
   .back-head{ display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--navy); padding-bottom:7px; margin-bottom:9px; }
@@ -451,6 +455,8 @@
                   Browse photo
                   <input type="file" id="officePhotoInput" accept="image/*" style="display:none;">
                 </label>
+                <input type="range" id="photoPosSlider" class="photoPosSlider no-export" min="0" max="100" value="50" style="display:none;">
+                <p class="photoPosHint no-export" id="photoPosHint" style="display:none;">↕ Adjust photo</p>
               </div>
               <div class="identity">
                 <p class="name" id="outName">Gulshan Choudhary</p>
@@ -468,8 +474,8 @@
             <div class="footrow no-export">
               <span class="flipnote">Tap to flip →</span>
             </div>
-          </div>
-          <div class="circuitDecor">
+
+            <div class="circuitDecor">
             <svg viewBox="0 0 420 34" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
               <g fill="none" stroke="#8B98AC" stroke-width="1.3">
                 <path d="M0 26 H36 L46 16 H86 V26 H126 L136 34"/>
@@ -502,6 +508,7 @@
                 <circle cx="350" cy="8" r="2.6"/>
               </g>
             </svg>
+          </div>
           </div>
           </div>
         </div>
@@ -642,15 +649,24 @@
   function applyPhoto(dataUrl){
     const img = $('photoImg');
     const placeholder = $('photoPlaceholder');
+    const slider = $('photoPosSlider');
     if(dataUrl){
       img.src = dataUrl;
       img.style.display = 'block';
       placeholder.style.display = 'none';
+      slider.classList.add('show');
+      $('photoPosHint').classList.add('show');
+      img.style.objectPosition = 'center ' + slider.value + '%';
     } else {
       img.style.display = 'none';
       placeholder.style.display = 'block';
+      slider.classList.remove('show');
+      $('photoPosHint').classList.remove('show');
     }
   }
+  $('photoPosSlider').addEventListener('input', (e) => {
+    $('photoImg').style.objectPosition = 'center ' + e.target.value + '%';
+  });
 
   function saveState(state){
     try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
@@ -682,6 +698,7 @@
     if(state.approved && state.hubId){
       renderApproved(state.hubId, state.name, state.email, false);
     }
+    syncCardHeightSoon();
   }
 
   async function renderApproved(idVal, studentName, studentEmail, animateDots){
@@ -711,6 +728,7 @@
       </div>
       <p class="officehint downloadnote">Downloadable front &amp; back images and the reply email link are in the panel below the card ↓</p>
     `;
+    syncCardHeightSoon();
 
     // everything else lives in its own panel below the card, so nothing gets clipped
     const extras = $('extrasPanel');
@@ -853,6 +871,30 @@
     if(e.target.closest('input, button, a, label')) return;
     if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleFlip(); }
   });
+
+  // ---- make the card exactly as tall as its content needs, on any screen size ----
+  function measureNaturalHeight(el){
+    if(!el) return 0;
+    const prevHeight = el.style.height;
+    el.style.height = 'auto';
+    const h = el.scrollHeight;
+    el.style.height = prevHeight;
+    return h;
+  }
+  function syncCardHeight(){
+    const frontBody = document.querySelector('.front-body');
+    const backBody = document.querySelector('.back-body');
+    const frontH = measureNaturalHeight(frontBody);
+    const backH = measureNaturalHeight(backBody);
+    const target = Math.max(frontH, backH, 200) + 6;
+    card.style.height = target + 'px';
+  }
+  let _syncTimer = null;
+  function syncCardHeightSoon(){
+    clearTimeout(_syncTimer);
+    _syncTimer = setTimeout(syncCardHeight, 60);
+  }
+  window.addEventListener('resize', syncCardHeightSoon);
 
   // ---- on load: either open from the office's email link, restore this device's
   // own saved application, or show a blank form ----
